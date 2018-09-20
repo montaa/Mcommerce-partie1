@@ -2,6 +2,8 @@ package com.ecommerce.microcommerce.web.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -129,6 +131,27 @@ public class ProductController {
         return productDao.chercherUnProduitCher(400);
     }
 
+    
+    @GetMapping(value = "/AdminProduits")
+
+    public Map<Product, Integer> calculerMargeProduit() {
+
+        List<Product> produits = productDao.findAll();
+        
+/*
+        SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("prixAchat");
+
+        FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
+
+        MappingJacksonValue produitsFiltres = new MappingJacksonValue(produits);
+
+        produitsFiltres.setFilters(listDeNosFiltres);*/
+        
+        Map<Product, Integer> result = produits.stream().collect(
+                Collectors.toMap(e-> e, e -> e.getPrix() - e.getPrixAchat()));
+
+        return result;
+    }
 
 
 }
